@@ -42,9 +42,9 @@ public class Fou extends Piece {
        
         // Vérifie que toutes les cases sur le chemin sont vides
         while (x != endX && y != endY) {
-            System.out.println(x+" et "+y);
+ 
             if (Echiquier.getPiece(x*64, y*64) != null) {
-                 System.out.println("il y a une piece");
+                
                 return false;
             }
             x += ((endX - startX) > 0 ? 1 : -1);
