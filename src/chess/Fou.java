@@ -18,34 +18,47 @@ public class Fou extends Piece {
     @Override
      public void bouger(Piece piece, int startX, int startY,int posx,int posy)
      {
-         super.bouger(this,startX,startY,posx, posy);
+       
          //System.out.println((this.estBlanc?"blanc" :"noir")+" "+this.posx+" "+this.posy);
-          if (Debordement(posx,posy) && MouvPion( this,  startX,  startY,  posx, posy))
+          if (Debordement(posx,posy) && MouvFou(this,  startX,  startY,  posx, posy))
           {
-              //System.out.println((this.estBlanc?"blanc" :"noir")+" "+this.nom+" bouge");
-              System.out.println((this.estBlanc?"blanc" :"noir")+" "+this.posx+" "+this.posy);
+              super.bouger(this,startX,startY,posx, posy);
+              
           }
      
      }
-      private boolean MouvPion(Fou fou, int startX, int startY, int endX, int endY) {
-        int direction = fou.estBlanc == true ? 1 : -1;
-
-        // Mouvement d'une case en avant
-        if (endX == startX + direction && endY == startY) {
-            return true;
+    private boolean MouvFou(Fou fou, int startX, int startY, int endX, int endY) {
+        
+        // Vérifie que le mouvement est bien en diagonale
+        if (Math.abs(endX - startX) != Math.abs(endY - startY)) {
+            return false;
         }
 
-        // Mouvement de deux cases en avant depuis la position initiale
-        if (startX == (fou.estBlanc == true ? 1 : 6) && endX == startX + 2 * direction && endY == startY) {
-            return true;
+        int xDirection = (endX - startX) > 0 ? 1*Math.abs(endX - startX) : -1*Math.abs(endX - startX);
+        int yDirection = (endY - startY) > 0 ? 1*Math.abs(endY - startY) : -1*Math.abs(endY - startY); 
+
+        int x = startX + ((endX - startX) > 0 ? 1 : -1);
+        int y = startY + ((endY - startY) > 0 ? 1 : -1);
+       
+        // Vérifie que toutes les cases sur le chemin sont vides
+        while (x != endX && y != endY) {
+            System.out.println(x+" et "+y);
+            if (Echiquier.getPiece(x*64, y*64) != null) {
+                 System.out.println("il y a une piece");
+                return false;
+            }
+            x += ((endX - startX) > 0 ? 1 : -1);
+            y += ((endY - startY) > 0 ? 1 : -1);
+            
         }
 
-        // Capture en diagonale
-        if (endX == startX + direction && Math.abs(endY - startY) == 1) {
+        // Vérifie la case de destination
+        Piece destinationPion = Echiquier.getPiece(endX*64, endY*64);
+        if (destinationPion == null || destinationPion.estBlanc != fou.estBlanc) {
             return true;
         }
-
         return false;
-    }   
+}
+
     
 }

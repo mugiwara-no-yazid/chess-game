@@ -18,33 +18,24 @@ public class Tour extends Piece {
     @Override
      public void bouger(Piece piece, int startX, int startY,int posx,int posy)
      {
-         super.bouger(this,startX,startY,posx, posy);
+        
          //System.out.println((this.estBlanc?"blanc" :"noir")+" "+this.posx+" "+this.posy);
-          if (Debordement(posx,posy) && MouvPion( this,  startX,  startY,  posx, posy))
+          if (Debordement(posx,posy) && MouvTour( this,  startX,  startY,  posx, posy))
           {
+               super.bouger(this,startX,startY,posx, posy);
               //System.out.println((this.estBlanc?"blanc" :"noir")+" "+this.nom+" bouge");
-              System.out.println((this.estBlanc?"blanc" :"noir")+" "+this.posx+" "+this.posy);
+              //System.out.println((this.estBlanc?"blanc" :"noir")+" "+this.posx+" "+this.posy);
           }
      
      }
-      private boolean MouvPion(Tour tour, int startX, int startY, int endX, int endY) {
-        int direction = tour.estBlanc == true ? 1 : -1;
-
+      private boolean MouvTour(Tour tour, int startX, int startY, int endX, int endY) {
+        int direction = tour.estBlanc == true ? -6 : 6;
+        Piece destinationPion = Echiquier.getPiece(endX*64, endY*64);
+       
         // Mouvement d'une case en avant
-        if (endX == startX + direction && endY == startY) {
+        if (endY == startY + direction && endX == startX && destinationPion == null) {
             return true;
         }
-
-        // Mouvement de deux cases en avant depuis la position initiale
-        if (startX == (tour.estBlanc == true ? 1 : 6) && endX == startX + 2 * direction && endY == startY) {
-            return true;
-        }
-
-        // Capture en diagonale
-        if (endX == startX + direction && Math.abs(endY - startY) == 1) {
-            return true;
-        }
-
         return false;
     }   
 }
