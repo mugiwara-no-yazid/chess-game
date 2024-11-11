@@ -18,33 +18,30 @@ public class Roi extends Piece {
     @Override
      public void bouger(Piece piece, int startX, int startY,int posx,int posy)
      {
-         super.bouger(this,startX,startY,posx, posy);
+         
          //System.out.println((this.estBlanc?"blanc" :"noir")+" "+this.posx+" "+this.posy);
-          if (Debordement(posx,posy) && MouvPion( this,  startX,  startY,  posx, posy))
+          if (Debordement(posx,posy) && MouvRoi( this,  startX,  startY,  posx, posy))
           {
+              super.bouger(this,startX,startY,posx, posy);
               //System.out.println((this.estBlanc?"blanc" :"noir")+" "+this.nom+" bouge");
               System.out.println((this.estBlanc?"blanc" :"noir")+" "+this.posx+" "+this.posy);
           }
      
      }
-      private boolean MouvPion(Roi roi, int startX, int startY, int endX, int endY) {
-        int direction = roi.estBlanc == true ? 1 : -1;
-
-        // Mouvement d'une case en avant
-        if (endX == startX + direction && endY == startY) {
+    private boolean MouvRoi(Roi roi, int startX, int startY, int endX, int endY) {
+    // Vérifier que le mouvement est d'une case dans n'importe quelle direction
+    int deltaX = Math.abs(endX - startX);
+    int deltaY = Math.abs(endY - startY);
+    
+    if (deltaX <= 1 && deltaY <= 1) {
+        Piece destinationPion = Echiquier.getPiece(endX, endY);
+        // Vérifier si la case de destination est vide ou contient une pièce d'une couleur opposée
+        if (destinationPion == null || destinationPion.estBlanc != roi.estBlanc) {
             return true;
         }
-
-        // Mouvement de deux cases en avant depuis la position initiale
-        if (startX == (roi.estBlanc == true ? 1 : 6) && endX == startX + 2 * direction && endY == startY) {
-            return true;
-        }
-
-        // Capture en diagonale
-        if (endX == startX + direction && Math.abs(endY - startY) == 1) {
-            return true;
-        }
-
-        return false;
-    }   
+    }
+    
+    return false;
+}
+   
 }
