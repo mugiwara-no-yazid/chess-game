@@ -5,6 +5,8 @@
 package chess;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.MouseListener;
 import java.awt.Image;
@@ -27,13 +29,18 @@ public class Echiquier {
     public static Piece pieceSelectionner = null;
     private int startX =0;
     private int startY=0;
+    private JLayeredPane layeredPane;
+
     public void dessiner() throws IOException
     {
             JFrame fenetre = new JFrame("Echec et mat");
             fenetre.setBounds(50,50,512,512);
             fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             fenetre.setUndecorated(true);
-            
+            layeredPane = new JLayeredPane();
+            layeredPane.setPreferredSize(new Dimension(512, 512));
+            fenetre.add(layeredPane);
+        
             BufferedImage tous=ImageIO.read(new File("C:\\Users\\Yazid Soumanou\\Desktop\\Chess\\chess.png"));
             Image imgs[]=new Image[12];
             int ind=0;
@@ -42,41 +49,9 @@ public class Echiquier {
                     imgs[ind]=tous.getSubimage(x, y, 200, 200).getScaledInstance(64, 64, BufferedImage.SCALE_SMOOTH);
                     ind++;
             }    }
-            Tour nTour=new Tour(0, 0, false, "tour", piece);
-            Chevalier nChevalier=new Chevalier(1, 0, false, "chevalier", piece);
-            Fou nFou=new Fou(2, 0, false, "fou", piece);
-            Reine nReine=new Reine(3, 0, false, "reine", piece);
-            Roi nRoi=new Roi(4, 0, false, "roi", piece);
-            Fou nFou2=new Fou(5, 0, false, "fou", piece);
-            Chevalier nChevalier2= new Chevalier(6, 0, false, "chevalier", piece);
-            Tour nTour2=new Tour(7, 0, false, "tour", piece);
-            Pion nPion1=new Pion(1, 1, false, "pion", piece);
-            Pion nPion2=new Pion(2, 1, false, "pion", piece);
-            Pion nPion3=new Pion(3, 1, false, "pion", piece);
-            Pion nPion4=new Pion(4, 1, false, "pion", piece);
-            Pion nPion5=new Pion(5, 1, false, "pion", piece);
-            Pion nPion6=new Pion(6, 1, false, "pion", piece);
-            Pion nPion7=new Pion(7, 1, false, "pion", piece);
-            Pion nPion8=new Pion(0, 1, false, "pion", piece);
-
-            Tour bTour=new Tour(0, 7, true, "tour", piece);
-            Chevalier bChevalier=new Chevalier(1, 7, true, "chevalier", piece);
-            Fou bFou=new Fou(2, 7, true, "fou", piece);
-            Reine bReine=new Reine(3, 7, true, "reine", piece);
-            Roi bRoi=new Roi(4, 7, true, "roi", piece);
-            Fou bFou2=new Fou(5, 7, true, "fou", piece);
-            Chevalier bChevalier2=new Chevalier(6, 7, true, "chevalier", piece);
-            Tour bTour2=new Tour(7, 7, true, "tour", piece);
-            Pion bPion1=new Pion(1, 6, true, "pion", piece);
-            Pion bPion2=new Pion(2, 6, true, "pion", piece);
-            Pion bPion3=new Pion(3, 6, true, "pion", piece);
-            Pion bPion4=new Pion(4, 6, true, "pion", piece);
-            Pion bPion5=new Pion(5, 6, true, "pion", piece);
-            Pion bPion6=new Pion(6, 6, true, "pion", piece);
-            Pion bPion7=new Pion(7, 6, true, "pion", piece);
-            Pion bPion8=new Pion(0, 6, true, "pion", piece);
             
-            
+                  initialiserPieces();
+                  
             JPanel pn = new JPanel(){
                 @Override
                 public void paint(Graphics g) {
@@ -126,10 +101,11 @@ public class Echiquier {
                 }
 
                 }
-
+                
             };
+            pn.setBounds(0, 0, 512, 512);
+            layeredPane.add(pn, JLayeredPane.DEFAULT_LAYER);
             
-            fenetre.add(pn);
             
             fenetre.addMouseListener( new MouseListener()
             {
@@ -140,13 +116,35 @@ public class Echiquier {
                 
                 
                 if (pieceSelectionner == null) {
-                    pieceSelectionner = getPiece(x, y);
-                    
-                } else {
+            pieceSelectionner = getPiece(x, y);
+            JPanel pn2 = pieceSelectionner.chemin(pieceSelectionner, startX, startY, x, y);
+            pn2.setBounds(0, 0, fenetre.getWidth(), fenetre.getHeight());
+            layeredPane.add(pn2, JLayeredPane.PALETTE_LAYER);
+            layeredPane.revalidate();
+
+            //fenetre.repaint();
+                        }
+
+               /* else if(pieceSelectionner != null && (pieceSelectionner.posx!=x/64 || pieceSelectionner.posy!=y/64) )
+                {
+                    if (getPiece(x, y) ==null)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                         pieceSelectionner = getPiece(x, y);
+                         System.out.println("x = "+x/64+" pos x = "+pieceSelectionner.nom);
+                    }
+                   
+                } */
+                else {
                     //System.out.println("startX = "+startX/64+" startY = "+startY/64);
                     //System.out.println("X = "+x/64+" Y = "+y/64);
+                   
                     deplacerPiece(pieceSelectionner,startX,startY, x, y);
                     pieceSelectionner = null;
+                    viderCouchesSupplementaires();
                     fenetre.repaint();
                 }
                 
@@ -184,15 +182,7 @@ public class Echiquier {
             fenetre.addMouseMotionListener(new MouseMotionListener()
             {
                 @Override
-                public void mouseDragged(MouseEvent e) {
-                     /*if(pieceSelectionner!=null)
-                    {
-                        pieceSelectionner.piecex =e.getX()-32;
-                        pieceSelectionner.piecey =e.getY()-32;
-                        fenetre.repaint();
-                    }*/
-                     
-                }
+                public void mouseDragged(MouseEvent e) {}
 
                 @Override
                 public void mouseMoved(MouseEvent e) {
@@ -222,6 +212,49 @@ public class Echiquier {
         // Ajoutez ici la logique pour vérifier si le mouvement est valide pour le type de pièce
         piece.bouger(piece,startX/64,startY/64,x/64, y/64);
         //bouger(Piece piece, int startX, int startY,int posx,int posy)
+    }
+     private void initialiserPieces() {
+         Tour nTour=new Tour(0, 0, false, "tour", piece);
+            Chevalier nChevalier=new Chevalier(1, 0, false, "chevalier", piece);
+            Fou nFou=new Fou(2, 0, false, "fou", piece);
+            Reine nReine=new Reine(3, 0, false, "reine", piece);
+            Roi nRoi=new Roi(4, 0, false, "roi", piece);
+            Fou nFou2=new Fou(5, 0, false, "fou", piece);
+            Chevalier nChevalier2= new Chevalier(6, 0, false, "chevalier", piece);
+            Tour nTour2=new Tour(7, 0, false, "tour", piece);
+            Pion nPion1=new Pion(1, 1, false, "pion", piece);
+            Pion nPion2=new Pion(2, 1, false, "pion", piece);
+            Pion nPion3=new Pion(3, 1, false, "pion", piece);
+            Pion nPion4=new Pion(4, 1, false, "pion", piece);
+            Pion nPion5=new Pion(5, 1, false, "pion", piece);
+            Pion nPion6=new Pion(6, 1, false, "pion", piece);
+            Pion nPion7=new Pion(7, 1, false, "pion", piece);
+            Pion nPion8=new Pion(0, 1, false, "pion", piece);
+
+            Tour bTour=new Tour(0, 7, true, "tour", piece);
+            Chevalier bChevalier=new Chevalier(1, 7, true, "chevalier", piece);
+            Fou bFou=new Fou(2, 7, true, "fou", piece);
+            Reine bReine=new Reine(3, 7, true, "reine", piece);
+            Roi bRoi=new Roi(4, 7, true, "roi", piece);
+            Fou bFou2=new Fou(5, 7, true, "fou", piece);
+            Chevalier bChevalier2=new Chevalier(6, 7, true, "chevalier", piece);
+            Tour bTour2=new Tour(7, 7, true, "tour", piece);
+            Pion bPion1=new Pion(1, 6, true, "pion", piece);
+            Pion bPion2=new Pion(2, 6, true, "pion", piece);
+            Pion bPion3=new Pion(3, 6, true, "pion", piece);
+            Pion bPion4=new Pion(4, 6, true, "pion", piece);
+            Pion bPion5=new Pion(5, 6, true, "pion", piece);
+            Pion bPion6=new Pion(6, 6, true, "pion", piece);
+            Pion bPion7=new Pion(7, 6, true, "pion", piece);
+            Pion bPion8=new Pion(0, 6, true, "pion", piece);
+       
+    }
+      private void viderCouchesSupplementaires() {
+        for (Component comp : layeredPane.getComponentsInLayer(JLayeredPane.PALETTE_LAYER)) {
+            layeredPane.remove(comp);
+        }
+        layeredPane.revalidate();
+        layeredPane.repaint();
     }
 
 }

@@ -6,6 +6,7 @@ package chess;
 
 import static chess.Echiquier.TAILLE_GRILLE;
 import java.util.*;
+import javax.swing.JPanel;
 
 /**
  *
@@ -59,6 +60,20 @@ public class Piece {
                 return;
             }
         
+    }
+    public JPanel chemin(Piece piece, int startX, int startY, int endX, int endY)
+    {
+        JPanel pn = new JPanel();
+        if(piece.nom=="pion")
+        {
+         Pion p = (Pion) this;
+         
+         return pn = p.cheminpion(p, startX, startY, endX, endY);
+         //System.out.println("Mouvement chemin");   
+         
+        }
+     //System.out.println(this.nom);
+     return pn;   
     }
     
     public void tuerpiece()
