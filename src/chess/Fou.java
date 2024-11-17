@@ -4,7 +4,12 @@
  */
 package chess;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.LinkedList;
+import javax.swing.JPanel;
 
 /**
  *
@@ -59,6 +64,33 @@ public class Fou extends Piece {
         }
         return false;
 }
+    public JPanel cheminFou(Fou fou, int startX, int startY) {
+    JPanel pn = new JPanel();
+    int startx=startX/64;
+    int starty=startY/64;
+   
+    int direction = fou.estBlanc == true ? -1 : 1;
+         pn = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setColor(Color.DARK_GRAY);
+                
+               while(Echiquier.getPiece(startx*64, (starty + direction)*64)==null)
+               {
+                    g2d.setStroke(new BasicStroke(2));
+                    g2d.drawRect((startx*64), (starty*64), 64, 64);
+                    g2d.drawRect((startx*64), (starty*64)+direction*64, 64, 64);
+                    g2d.drawRect((startx*64), (starty*64)+direction*64*2, 64, 64);  
+               }
+                    }
+         };
+        pn.setBounds(0, 0, 512, 512); // Ajustez cette taille en fonction de votre échiquier
+        pn.setOpaque(false);
+    return pn;
 
-    
+
+}
+  
 }

@@ -61,17 +61,33 @@ public class Piece {
             }
         
     }
-    public JPanel chemin(Piece piece, int startX, int startY, int endX, int endY)
+    public JPanel chemin(Piece piece, int startX, int startY)
     {
         JPanel pn = new JPanel();
-        if(piece.nom=="pion")
+        switch (piece.nom){
+            case "pion":
+                Pion p = (Pion) this;
+                return pn = p.cheminPion(p, startX, startY);
+            
+            case "tour":
+                Tour t = (Tour) this;
+                return pn = t.cheminTour(t, startX, startY);
+               
+            case "fou":
+                Fou f = (Fou) this;
+                return pn = f.cheminFou(f, startX, startY);
+            
+               
+        }
+                   
+       /* if(piece.nom=="pion")
         {
          Pion p = (Pion) this;
          
-         return pn = p.cheminpion(p, startX, startY, endX, endY);
+         return pn = p.cheminPion(p, startX, startY);
          //System.out.println("Mouvement chemin");   
          
-        }
+        }*/
      //System.out.println(this.nom);
      return pn;   
     }

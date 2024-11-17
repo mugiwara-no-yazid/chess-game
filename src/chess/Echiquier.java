@@ -116,12 +116,13 @@ public class Echiquier {
                 
                 
                 if (pieceSelectionner == null) {
+                    if(getPiece(x, y)!=null){
             pieceSelectionner = getPiece(x, y);
-            JPanel pn2 = pieceSelectionner.chemin(pieceSelectionner, startX, startY, x, y);
+            JPanel pn2 = pieceSelectionner.chemin(pieceSelectionner, startX, startY);
             pn2.setBounds(0, 0, fenetre.getWidth(), fenetre.getHeight());
             layeredPane.add(pn2, JLayeredPane.PALETTE_LAYER);
             layeredPane.revalidate();
-
+                    }
             //fenetre.repaint();
                         }
 

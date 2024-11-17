@@ -67,12 +67,11 @@ public class Pion extends Piece {
     }   
     
     
-    public JPanel cheminpion(Pion pion, int startX, int startY, int endX, int endY) {
+    public JPanel cheminPion(Pion pion, int startX, int startY) {
     JPanel pn = new JPanel();
     int startx=startX/64;
     int starty=startY/64;
-    System.out.println(startX / 64 + ";" + startY / 64);
-    
+   
     int direction = pion.estBlanc == true ? -1 : 1;
          pn = new JPanel() {
             @Override
@@ -80,42 +79,41 @@ public class Pion extends Piece {
                 super.paintComponent(g);
                 Graphics2D g2d = (Graphics2D) g;
                 g2d.setColor(Color.DARK_GRAY);
-                //g.fillOval((startx*64)+20, (starty*64)+direction*40, 20, 20);
-                //g.fillRect((startx*64), (starty*64)+direction*64, 64, 64);
-                //g.fillRect((startx*64), (starty*64)+direction*64*2, 64, 64);
+                
                 if (startY / 64 == (pion.estBlanc == true ? 6 : 1) &&(Echiquier.getPiece(startx*64, (starty + direction)*64) == null && Echiquier.getPiece(startx*64, (starty + direction*2)*64) == null)) {
-                    g2d.setStroke(new BasicStroke(3));
+                    g2d.setStroke(new BasicStroke(2));
                     g2d.drawRect((startx*64), (starty*64), 64, 64);
                     g2d.drawRect((startx*64), (starty*64)+direction*64, 64, 64);
-                    g2d.drawRect((startx*64), (starty*64)+direction*64*2, 64, 64);
-                    
-                    g2d.setColor(Color.yellow);
-                    //g.fillOval((startx*64)+20, (starty*64)+direction*40, 20, 20);
-                    //g2d.fillRect((startx*64), (starty*64)+direction*64, 64, 64);
-                    //g2d.fillRect((startx*64), (starty*64)+direction*64*2, 64, 64);
+                    g2d.drawRect((startx*64), (starty*64)+direction*64*2, 64, 64);                   
             }else if(Echiquier.getPiece(startx*64, (starty + direction)*64) == null)
             {
+                g2d.setStroke(new BasicStroke(2));
                 g2d.drawRect((startx*64), (starty*64), 64, 64);
                 g2d.drawRect((startx*64), (starty*64)+direction*64, 64, 64);
             }
-            else if(Echiquier.getPiece(startx*64, (starty + direction)*64) != null && (pion.estBlanc != Echiquier.getPiece(startx*64, (starty + direction)*64).estBlanc))
+            if(Echiquier.getPiece((startx + direction)*64, (starty + direction)*64) != null && (pion.estBlanc != Echiquier.getPiece((startx + direction)*64, (starty + direction)*64).estBlanc))
             {
-                g2d.drawRect((startx*64), (starty*64), 64, 64);
-                g2d.drawRect((startx*64), (starty*64)+direction*64, 64, 64);
+                g2d.setColor(Color.yellow);
+                 g2d.setStroke(new BasicStroke(2));
+                g2d.drawRect((startx*64), (starty*64), 64, 64);           
+                g2d.drawRect((startx + direction)*64, (starty*64)+direction*64, 64, 64);
+            }
+            if(Echiquier.getPiece((startx - direction)*64, (starty + direction)*64) != null && (pion.estBlanc != Echiquier.getPiece((startx - direction)*64, (starty + direction)*64).estBlanc))
+            {
+                g2d.setColor(Color.yellow);
+                g2d.setStroke(new BasicStroke(2));
+                g2d.drawRect((startx*64), (starty*64), 64, 64);           
+                g2d.drawRect((startx - direction)*64, (starty*64)+direction*64, 64, 64);
             }
             else
             {
                 g2d.drawRect((startx*64), (starty*64), 64, 64);
             }
-            
             }
         };
 
         pn.setBounds(0, 0, 512, 512); // Ajustez cette taille en fonction de votre échiquier
         pn.setOpaque(false);
-    
-
     return pn;
 }
-
 }
