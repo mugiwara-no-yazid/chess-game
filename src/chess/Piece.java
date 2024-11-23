@@ -18,24 +18,27 @@ public class Piece {
     int piecex;
     int piecey;
     String nom;
+    boolean bouger;
     boolean estBlanc;
     LinkedList <Piece> piece;
 
-    public Piece(int posx, int posy, boolean estBlanc, String nom, LinkedList<Piece> piece) {
+    public Piece(int posx, int posy, boolean estBlanc,boolean bouger, String nom, LinkedList<Piece> piece) {
         this.posx = posx;
         this.posy = posy;
         this.piecex = (posx)*64;
         this.piecey = (posy)*64; 
         this.estBlanc = estBlanc;
         this.nom = nom;
+        this.bouger =bouger;
         this.piece = piece;
+        
         piece.add(this);
     }
     protected boolean Debordement(int x, int y) {
         return x >= 0 && x < TAILLE_GRILLE && y >= 0 && y < TAILLE_GRILLE;
     }
     public void bouger(Piece piece, int startX, int startY,int posx,int posy){
-        if (Debordement(posx,posy))
+        if (Debordement(posx,posy) && this.bouger)
         {
             if(Echiquier.getPiece(posx*64, posy*64)!=null){
             if(Echiquier.getPiece(posx*64, posy*64).estBlanc!=estBlanc)
@@ -51,6 +54,7 @@ public class Piece {
         this.posy=posy;
         this.piecex=posx*64;
         this.piecey=posy*64;
+        Echiquier.mettreAJourPeutBouger();
         }
         else
             {
@@ -68,6 +72,10 @@ public class Piece {
             case "pion":
                 Pion p = (Pion) this;
                 return pn = p.cheminPion(p, startX, startY);
+                
+            case "chevalier":
+                Chevalier che = (Chevalier) this;
+                return pn = che.cheminChevalier(che, startX, startY);
             
             case "tour":
                 Tour t = (Tour) this;
@@ -76,6 +84,14 @@ public class Piece {
             case "fou":
                 Fou f = (Fou) this;
                 return pn = f.cheminFou(f, startX, startY);
+                
+            case "reine":
+                Reine r = (Reine) this;
+                return pn = r.cheminReine(r, startX, startY);
+                
+            case "roi":
+                Roi ro = (Roi) this;
+                return pn = ro.cheminRoi(ro, startX, startY);
             
                
         }

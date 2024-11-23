@@ -4,7 +4,12 @@
  */
 package chess;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.LinkedList;
+import javax.swing.JPanel;
 
 /**
  *
@@ -12,8 +17,8 @@ import java.util.LinkedList;
  */
 public class Chevalier extends Piece {
     
-    public Chevalier(int posx, int posy, boolean estBlanc, String nom, LinkedList<Piece> piece) {
-        super(posx, posy, estBlanc, nom, piece);
+   public Chevalier(int posx, int posy, boolean estBlanc,boolean bouger, String nom, LinkedList<Piece> piece) {
+        super(posx, posy, estBlanc,bouger, nom, piece);
     }
     @Override
      public void bouger(Piece piece, int startX, int startY,int posx,int posy)
@@ -50,5 +55,46 @@ public class Chevalier extends Piece {
 
         return false;
     }
-   
+   public JPanel cheminChevalier(Chevalier chevalier, int startX, int startY) {
+    JPanel pn = new JPanel();
+    int startx = startX / 64;
+    int starty = startY / 64;
+
+    pn = new JPanel() {
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setColor(Color.DARK_GRAY);
+            g2d.setStroke(new BasicStroke(2));
+
+            int[][] directions = {
+                {-2, -1}, {-2, 1}, {-1, -2}, {-1, 2},
+                {1, -2}, {1, 2}, {2, -1}, {2, 1}
+            };
+
+            for (int[] direction : directions) {
+                int newX = startx + direction[0];
+                int newY = starty + direction[1];
+
+                if (newX >= 0 && newX <= 7 && newY >= 0 && newY <= 7) {
+                    Piece piece = Echiquier.getPiece(newX * 64, newY * 64);
+                    if (piece == null || piece.estBlanc != chevalier.estBlanc) {
+                        if (piece != null && piece.estBlanc != chevalier.estBlanc) {
+                            g2d.setColor(Color.YELLOW);
+                        } else {
+                            g2d.setColor(Color.DARK_GRAY);
+                        }
+                        g2d.drawRect(newX * 64, newY * 64, 64, 64);
+                    }
+                }
+            }
+        }
+    };
+
+    pn.setBounds(0, 0, 512, 512); // Ajustez cette taille en fonction de votre échiquier
+    pn.setOpaque(false);
+    return pn;
+}
+
 }

@@ -17,8 +17,8 @@ import javax.swing.JPanel;
  */
 public class Fou extends Piece {
     
-    public Fou(int posx, int posy, boolean estBlanc, String nom, LinkedList<Piece> piece) {
-        super(posx, posy, estBlanc, nom, piece);
+    public Fou(int posx, int posy, boolean estBlanc,boolean bouger, String nom, LinkedList<Piece> piece) {
+        super(posx, posy, estBlanc,bouger, nom, piece);
     }
     @Override
      public void bouger(Piece piece, int startX, int startY,int posx,int posy)
@@ -64,33 +64,77 @@ public class Fou extends Piece {
         }
         return false;
 }
-    public JPanel cheminFou(Fou fou, int startX, int startY) {
+public JPanel cheminFou(Fou fou, int startX, int startY) {
     JPanel pn = new JPanel();
-    int startx=startX/64;
-    int starty=startY/64;
-   
-    int direction = fou.estBlanc == true ? -1 : 1;
-         pn = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2d = (Graphics2D) g;
-                g2d.setColor(Color.DARK_GRAY);
-                
-               while(Echiquier.getPiece(startx*64, (starty + direction)*64)==null)
-               {
-                    g2d.setStroke(new BasicStroke(2));
-                    g2d.drawRect((startx*64), (starty*64), 64, 64);
-                    g2d.drawRect((startx*64), (starty*64)+direction*64, 64, 64);
-                    g2d.drawRect((startx*64), (starty*64)+direction*64*2, 64, 64);  
-               }
+    int startx = startX / 64;
+    int starty = startY / 64;
+
+    pn = new JPanel() {
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setColor(Color.DARK_GRAY);
+            g2d.setStroke(new BasicStroke(2));
+            
+            // Diagonale Haut-Gauche
+            for (int i = 1; startx - i >= 0 && starty - i >= 0; i++) {
+                if (Echiquier.getPiece((startx - i) * 64, (starty - i) * 64) == null) {
+                    g2d.drawRect((startx - i) * 64, (starty - i) * 64, 64, 64);
+                } else {
+                    if (Echiquier.getPiece((startx - i) * 64, (starty - i) * 64).estBlanc != fou.estBlanc) {
+                        g2d.setColor(Color.YELLOW);
+                        g2d.drawRect((startx - i) * 64, (starty - i) * 64, 64, 64);
                     }
-         };
-        pn.setBounds(0, 0, 512, 512); // Ajustez cette taille en fonction de votre échiquier
-        pn.setOpaque(false);
+                    break;
+                }
+            }
+             g2d.setColor(Color.DARK_GRAY);
+            // Diagonale Haut-Droite
+            for (int i = 1; startx + i <= 7 && starty - i >= 0; i++) {
+                if (Echiquier.getPiece((startx + i) * 64, (starty - i) * 64) == null) {
+                    g2d.drawRect((startx + i) * 64, (starty - i) * 64, 64, 64);
+                } else {
+                    if (Echiquier.getPiece((startx + i) * 64, (starty - i) * 64).estBlanc != fou.estBlanc) {
+                        g2d.setColor(Color.YELLOW);
+                        g2d.drawRect((startx + i) * 64, (starty - i) * 64, 64, 64);
+                    }
+                    break;
+                }
+            }
+             g2d.setColor(Color.DARK_GRAY);
+            // Diagonale Bas-Gauche
+            for (int i = 1; startx - i >= 0 && starty + i <= 7; i++) {
+                if (Echiquier.getPiece((startx - i) * 64, (starty + i) * 64) == null) {
+                    g2d.drawRect((startx - i) * 64, (starty + i) * 64, 64, 64);
+                } else {
+                    if (Echiquier.getPiece((startx - i) * 64, (starty + i) * 64).estBlanc != fou.estBlanc) {
+                        g2d.setColor(Color.YELLOW);
+                        g2d.drawRect((startx - i) * 64, (starty + i) * 64, 64, 64);
+                    }
+                    break;
+                }
+            }
+             g2d.setColor(Color.DARK_GRAY);
+            // Diagonale Bas-Droite
+            for (int i = 1; startx + i <= 7 && starty + i <= 7; i++) {
+                if (Echiquier.getPiece((startx + i) * 64, (starty + i) * 64) == null) {
+                    g2d.drawRect((startx + i) * 64, (starty + i) * 64, 64, 64);
+                } else {
+                    if (Echiquier.getPiece((startx + i) * 64, (starty + i) * 64).estBlanc != fou.estBlanc) {
+                        g2d.setColor(Color.YELLOW);
+                        g2d.drawRect((startx + i) * 64, (starty + i) * 64, 64, 64);
+                    }
+                    break;
+                }
+            }
+        }
+    };
+
+    pn.setBounds(0, 0, 512, 512); // Ajustez cette taille en fonction de votre échiquier
+    pn.setOpaque(false);
     return pn;
-
-
 }
+
   
 }

@@ -7,9 +7,16 @@ package chess;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.LinkedList;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
@@ -19,8 +26,8 @@ import javax.swing.JPanel;
 public class Pion extends Piece {
     //private final static int MOUVEMENT ={8};
     
-    public Pion(int posx, int posy, boolean estBlanc, String nom, LinkedList<Piece> piece) {
-        super(posx, posy, estBlanc, nom, piece);
+    public Pion(int posx, int posy, boolean estBlanc,boolean bouger, String nom, LinkedList<Piece> piece) {
+        super(posx, posy, estBlanc,bouger, nom, piece);
     }
     @Override
      public void bouger(Piece piece, int startX, int startY,int posx,int posy)
@@ -116,4 +123,5 @@ public class Pion extends Piece {
         pn.setOpaque(false);
     return pn;
 }
-}
+    
+ }

@@ -17,8 +17,8 @@ import javax.swing.JPanel;
  */
 public class Tour extends Piece {
     
-    public Tour(int posx, int posy, boolean estBlanc, String nom, LinkedList<Piece> piece) {
-        super(posx, posy, estBlanc, nom, piece);
+   public Tour(int posx, int posy, boolean estBlanc,boolean bouger, String nom, LinkedList<Piece> piece) {
+        super(posx, posy, estBlanc,bouger, nom, piece);
     }
     @Override
      public void bouger(Piece piece, int startX, int startY,int posx,int posy)
